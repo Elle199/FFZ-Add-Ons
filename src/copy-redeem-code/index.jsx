@@ -1,10 +1,31 @@
 const {createElement} = FrankerFaceZ.utilities.dom;
 
 const notificationRootSelector = ".persistent-notification .tw-interactable";
-const buttonContainerStyling = `
+const CustomStylesElement = document.createElement('style');
+CustomStylesElement.classList.add('crcb-styles');
+CustomStylesElement.innerHTML = `
+.copy-redeem-code-btn {
+    display: inline-flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    user-select: none;
+    border-radius: var(--border-radius-rounded);
+    height: var(--button-size-small);
+    width: var(--button-size-small);
+    background-color: var(--color-background-button-text-default);
+    color: var(--color-fill-button-icon);
+}
+.copy-redeem-code-btn:hover {
+    background-color: var(--color-background-button-text-hover);
+    color: var(--color-fill-button-icon-hover);
+}
+.redeem-btn-container {
     position: absolute !important;
     top: 4rem !important;
-`
+}
+`;
 
 class CopyRedeemCode extends Addon {
 	constructor(...args) {
@@ -22,12 +43,14 @@ class CopyRedeemCode extends Addon {
 	async onLoad() { }
 
 	onEnable() {
+		document.head.appendChild(CustomStylesElement);
 		// Trigger forceUpdate to get ready function to trigger when add-on is initially enabled, otherwise ready() does not fire.
 		this.NotificationManager.forceUpdate();
 		this.NotificationManager.ready(()=>{document.querySelector('.onsite-notifications button').addEventListener("click", this.notificationButtonCallback.bind(this))});
 	}
 
 	onDisable() {
+		document.head.removeChild(document.getElementsByClassName('crcb-styles')[0]);
 		document.querySelector('.onsite-notifications button').removeEventListener("click", this.notificationButtonCallback.bind(this));
 		
 		if(this.observer){
@@ -78,8 +101,8 @@ class CopyRedeemCode extends Addon {
 	}
 
 	buildCopyButton(redeemCode){
-		const button = (<div class="persistent-notification__delete redeem-btn-container" style={buttonContainerStyling}>
-			<button class="huqecI copy-redeem-code-btn"
+		const button = (<div class="persistent-notification__delete redeem-btn-container">
+			<button class="copy-redeem-code-btn"
 			  title={this.i18n.t('addon.copy-redeem-code.copy', 'Copy code')}
 			  data-redeem-code={redeemCode} 
 			  onClick={(event)=>{navigator.clipboard.writeText(event.currentTarget.dataset.redeemCode)}}>
