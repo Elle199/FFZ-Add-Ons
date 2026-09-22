@@ -81,13 +81,14 @@ class CopyRedeemCode extends Addon {
 
 		for (let index = 0; index < notifications.length; index++) {
 			const rootElement = notifications[index];
+			const appendTarget = rootElement.querySelector('div');
 			const bodyElement = notificationBodies[index];
 			const bodyText = bodyElement.innerText;
 
 			let redeemBtnAdded = rootElement.parentElement.querySelector('.redeem-btn-container') == null ? false : true;
 
 			if(bodyText.includes("Click here to redeem:") && this.regex.test(bodyText) && !redeemBtnAdded){
-				this.addCopyButton(rootElement, bodyText);
+				this.addCopyButton(appendTarget, bodyText);
 			}
 		}
 	}
@@ -128,11 +129,12 @@ class CopyRedeemCode extends Addon {
 				// Each added element is its own mutation, the node is therefore always index 0
 				const node = mutation.addedNodes[0];
 				if (node.classList.contains('persistent-notification')) { 
+					const appendTarget = node.querySelector('div');
 					const rootElement = node.querySelector('.persistent-notification__body'); 
 					const bodyText = rootElement.innerText;
 
 					if (bodyText.includes('Click here to redeem:') && this.regex.test(bodyText)){
-						this.addCopyButton(rootElement, bodyText);
+						this.addCopyButton(appendTarget, bodyText);
 					}
 				}
 			}
