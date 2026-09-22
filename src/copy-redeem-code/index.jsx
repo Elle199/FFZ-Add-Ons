@@ -1,6 +1,6 @@
 const {createElement} = FrankerFaceZ.utilities.dom;
 
-const notificationRootSelector = ".persistent-notification .tw-interactable";
+const notificationRootSelector = ".persistent-notification";
 const CustomStylesElement = document.createElement('style');
 CustomStylesElement.classList.add('crcb-styles');
 CustomStylesElement.innerHTML = `
@@ -128,9 +128,8 @@ class CopyRedeemCode extends Addon {
 				// Each added element is its own mutation, the node is therefore always index 0
 				const node = mutation.addedNodes[0];
 				if (node.classList.contains('persistent-notification')) { 
-					const rootElement = node.querySelector('.tw-interactable'); 
-					const bodyElement = node.querySelector('.tw-interactable .persistent-notification__body p'); 
-					const bodyText = bodyElement.innerText;
+					const rootElement = node.querySelector('.persistent-notification__body'); 
+					const bodyText = rootElement.innerText;
 
 					if (bodyText.includes('Click here to redeem:') && this.regex.test(bodyText)){
 						this.addCopyButton(rootElement, bodyText);
